@@ -9,9 +9,10 @@ interface User extends RowDataPacket {
   username: string;
 }
 
-// Função para buscar dados do usuário no lado do servidor
 async function getUserData() {
-  const token = cookies().get('token')?.value;
+  // Correção definitiva para Next.js 13+ App Router
+  const cookieStore = await cookies(); // Note o await aqui
+  const token = cookieStore.get('token')?.value;
 
   if (!token) {
     return null;
@@ -27,14 +28,11 @@ async function getUserData() {
 }
 
 export default async function DashboardPage() {
-  // Buscar dados do usuário no servidor
   const user = await getUserData();
 
-  // Se não houver usuário, redirecionar para login
   if (!user) {
-    redirect('/login');
+    redirect('/');
   }
 
-  // Renderizar o Client Component com os dados do usuário
   return <DashboardClient user={user} />;
 }
