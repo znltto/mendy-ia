@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || '9kX2mP7qW3zL8vN4tR1yU6iC0oA5bE2gH9jK'; // Use variável de ambiente em produção
+const JWT_SECRET = process.env.JWT_SECRET || 'X9mW3zL5vN7tR1yU4iC6oA2bE9gH0jK8lP2qF5rT7uV=='; // Use variável de ambiente em produção
 
 export function generateToken(user: { id: number; email: string; username: string }): string {
   return jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });

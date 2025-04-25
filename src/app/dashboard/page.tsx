@@ -18,7 +18,7 @@ async function getUserData() {
   }
 
   const payload = verifyToken(token);
-  if (!token) {
+  if (!payload) {
     return null;
   }
 
@@ -32,7 +32,7 @@ export default async function DashboardPage() {
 
   // Se não houver usuário, redirecionar para login
   if (!user) {
-    redirect('/');
+    redirect('/login');
   }
 
   // Renderizar o Client Component com os dados do usuário
