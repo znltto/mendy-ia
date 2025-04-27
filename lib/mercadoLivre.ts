@@ -1,5 +1,4 @@
-// lib/mercadoLivre.ts
-'use server'; // Importante para Server Actions
+
 
 export class MercadoLivreAPI {
   private readonly baseUrl = 'https://api.mercadolibre.com';
@@ -9,6 +8,7 @@ export class MercadoLivreAPI {
    * Gera URL de autenticação OAuth 2.0
    */
   public getAuthUrl(): string {
+    
     if (!process.env.MERCADO_LIVRE_APP_ID || !process.env.MERCADO_LIVRE_REDIRECT_URI) {
       throw new Error('Variáveis de ambiente não configuradas');
     }
@@ -75,6 +75,35 @@ export class MercadoLivreAPI {
         })
       )
     );
+  }
+
+  async getQuestions(accessToken: string, filters: {
+    status?: 'ANSWERED' | 'UNANSWERED' | 'ALL';
+    offset?: number;
+    limit?: number;
+  } = { status: 'ALL', limit: 50 }): Promise<any[]> {
+    const params = new URLSearchParams({
+      seller_id: 'SEU_USER_ID', // Substitua pelo ID do vendedor
+      limit: filters.limit?.toString() || '50'
+    });
+
+    if (filters.status && filters.status !== 'ALL') {
+      params.append('status', filters.status);
+    }
+
+    const response = await fetch(`${this.baseUrl}/questions/search?${params.toString()}`, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Accept': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`Erro ao buscar perguntas: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.questions || [];
   }
 
   /**

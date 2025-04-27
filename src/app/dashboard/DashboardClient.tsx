@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ArrowUpIcon, ArrowDownIcon, ChatBubbleLeftIcon, DocumentTextIcon, ClipboardDocumentListIcon, EnvelopeIcon } from '@heroicons/react/20/solid';
+import { ArrowUpIcon, ArrowDownIcon, ChatBubbleLeftIcon, DocumentTextIcon, ClipboardDocumentListIcon, EnvelopeIcon, ArrowRightIcon } from '@heroicons/react/20/solid';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -155,7 +155,8 @@ export default function DashboardClient({ user }: { user: User }) {
       isPositive: false,
       icon: <EnvelopeIcon className="h-5 w-5 text-orange-600" />,
       bgColor: "bg-orange-50",
-      description: "Total de mensagens não respondidas"
+      description: "Total de mensagens não respondidas",
+      path: "/dashboard/mensagens"
     },
     {
       title: "Perguntas para responder",
@@ -164,7 +165,8 @@ export default function DashboardClient({ user }: { user: User }) {
       isPositive: metrics.preVenda.perguntasNaoRespondidas.isPositive,
       icon: <ChatBubbleLeftIcon className="h-5 w-5 text-blue-600" />,
       bgColor: "bg-blue-50",
-      description: "Perguntas não respondidas"
+      description: "Perguntas não respondidas",
+      path: "/dashboard/perguntas"
     },
     {
       title: "Reclamações pendentes",
@@ -173,7 +175,8 @@ export default function DashboardClient({ user }: { user: User }) {
       isPositive: false,
       icon: <DocumentTextIcon className="h-5 w-5 text-red-600" />,
       bgColor: "bg-red-50",
-      description: "Reclamações não resolvidas"
+      description: "Reclamações não resolvidas",
+      path: "/dashboard/reclamacoes"
     },
     {
       title: "Mediações em aberto",
@@ -182,9 +185,15 @@ export default function DashboardClient({ user }: { user: User }) {
       isPositive: false,
       icon: <ClipboardDocumentListIcon className="h-5 w-5 text-purple-600" />,
       bgColor: "bg-purple-50",
-      description: "Mediações não finalizadas"
+      description: "Mediações não finalizadas",
+      path: "/dashboard/mediacoes"
     }
   ];
+
+  const handleViewDetails = (path: string) => {
+    console.log(`Navegando para: ${path}`);
+    router.push(path);
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 relative overflow-hidden">
@@ -235,6 +244,7 @@ export default function DashboardClient({ user }: { user: User }) {
           </motion.div>
         </div>
       </motion.div>
+
       <motion.header
         className="bg-white shadow-sm border-b border-gray-200"
         initial={{ y: -50, opacity: 0 }}
@@ -340,8 +350,12 @@ export default function DashboardClient({ user }: { user: User }) {
                   {metric.description}
                 </span>
               </div>
-              <button className="mt-3 w-full py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-md text-sm font-medium transition-colors">
+              <button 
+                onClick={() => handleViewDetails(metric.path)}
+                className="mt-3 w-full py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-md text-sm font-medium transition-colors flex items-center justify-center group"
+              >
                 Ver detalhes
+                <ArrowRightIcon className="h-4 w-4 ml-1 opacity-0 group-hover:opacity-100 transition-opacity" />
               </button>
             </motion.div>
           ))}
